@@ -1,12 +1,55 @@
 ---
-// src/pages/calendario.astro
-// Calendário escolar — versão simples (lista de eventos + .ics básico)
+/**
+ * src/pages/calendario.astro
+ * Versão corrigida: geração de .ics feita no frontmatter (server-side)
+ */
+
 const events = [
   { id: 'evt-1', title: 'Início do Ano Letivo', date: '2026-02-03', time: '08:00', location: 'Escola Roberto Turbay' },
   { id: 'evt-2', title: 'Reunião de Pais - 1º Bimestre', date: '2026-03-18', time: '18:30', location: 'Auditório da escola' },
   { id: 'evt-3', title: 'Festa Junina', date: '2026-06-12', time: '18:00', location: 'Pátio da escola' }
 ];
+
+// Helpers para formatar datas em UTC para .ics
+function pad(n){ return n < 10 ? '0'+n : ''+n; }
+
+function toICSDate(dateStr, timeStr){
+  // dateStr 'YYYY-MM-DD', timeStr 'HH:MM'
+  const [y,m,d] = dateStr.split('-').map(Number);
+  const [hh,mm] = (timeStr || '00:00').split(':').map(Number);
+  const dt = new Date(Date.UTC(y, m-1, d, hh, mm, 0));
+  return dt.getUTCFullYear()+pad(dt.getUTCMonth()+1)+pad(dt.getUTCDate())+'T'+pad(dt.getUTCHours())+pad(dt.getUTCMinutes())+pad(dt.getUTCSeconds())+'Z';
+}
+
+function generateICS(ev){
+  const uid = `${ev.id}@roberto-turbay`;
+  const dtstart = toICSDate(ev.date, ev.time);
+  // duration: 2 hours
+  const [y,m,d] = ev.date.split('-').map(Number);
+  const [hh,mm] = (ev.time || '00:00').split(':').map(Number);
+  const dtObj = new Date(Date.UTC(y, m-1, d, hh, mm, 0));
+  const dtEndObj = new Date(dtObj.getTime() + 2 * 60 * 60 * 1000);
+  const dtend = dtEndObj.getUTCFullYear()+pad(dtEndObj.getUTCMonth()+1)+pad(dtEndObj.getUTCDate())+'T'+pad(dtEndObj.getUTCHours())+pad(dtEndObj.getUTCMinutes())+pad(dtEndObj.getUTCSeconds())+'Z';
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//RoTurbay//Calendario//PT',
+    'BEGIN:VEVENT',
+    `UID:${uid}`,
+    `DTSTAMP:${toICSDate(new Date().toISOString().slice(0,10),'00:00')}`,
+    `DTSTART:${dtstart}`,
+    `DTEND:${dtend}`,
+    `SUMMARY:${ev.title}`,
+    `DESCRIPTION:Evento da escola — ${ev.title}`,
+    `LOCATION:${ev.location}`,
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ];
+  return lines.join('\r\n');
+}
 ---
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
@@ -23,25 +66,22 @@ const events = [
 
       <section class="bg-white border rounded p-6 shadow-sm">
         <ul class="space-y-4">
-          {events.map(ev => (
-            <li class="flex items-start justify-between p-3 border rounded" key={ev.id}>
-              <div>
-                <div class="font-semibold text-blue-800">{ev.title}</div>
-                <div class="text-sm text-slate-600">{new Date(ev.date + 'T' + (ev.time || '00:00')).toLocaleDateString('pt-BR')} — {ev.time} — {ev.location}</div>
-              </div>
+          {events.map(ev => {
+            const ics = generateICS(ev);
+            const href = `data:text/calendar;charset=utf8,${encodeURIComponent(ics)}`;
+            return (
+              <li class="flex items-start justify-between p-3 border rounded" key={ev.id}>
+                <div>
+                  <div class="font-semibold text-blue-800">{ev.title}</div>
+                  <div class="text-sm text-slate-600">{new Date(ev.date + 'T' + (ev.time || '00:00')).toLocaleDateString('pt-BR')} — {ev.time} — {ev.location}</div>
+                </div>
 
-              <div class="flex flex-col items-end gap-2">
-                <!-- link para baixar .ics (gera simples via data URI) -->
-                <a
-                  href={`data:text/calendar;charset=utf8,${encodeURIComponent(generateICS(ev))}`}
-                  download={`evento-${ev.id}.ics`}
-                  class="btn"
-                >
-                  Baixar .ics
-                </a>
-              </div>
-            </li>
-          ))}
+                <div class="flex flex-col items-end gap-2">
+                  <a href={href} download={`evento-${ev.id}.ics`} class="btn">Baixar .ics</a>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </section>
 
@@ -49,40 +89,5 @@ const events = [
         <p>Se quiser que eu adicione eventos recorrentes ou importar do Google Calendar, eu faço a integração com Firestore/Calendar depois.</p>
       </footer>
     </main>
-
-    <script type="module">
-      // Função simples para gerar ICS (usada pelo link data-uri)
-      function pad(n){ return n < 10 ? '0'+n : ''+n; }
-      function toICSDate(dateStr, timeStr){
-        const d = new Date(dateStr + 'T' + (timeStr || '00:00'));
-        return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z';
-      }
-      function generateICS(ev){
-        const uid = ev.id + '@roberto-turbay';
-        const dtstart = toICSDate(ev.date, ev.time);
-        // assume 2 hours duration for events simples
-        const dt = new Date(ev.date + 'T' + (ev.time || '00:00'));
-        dt.setHours(dt.getHours()+2);
-        const dtend = toICSDate(dt.toISOString().slice(0,10), pad(dt.getHours())+':'+pad(dt.getMinutes()));
-        const lines = [
-          'BEGIN:VCALENDAR',
-          'VERSION:2.0',
-          'PRODID:-//RoTurbay//Calendario//PT',
-          'BEGIN:VEVENT',
-          'UID:'+uid,
-          'DTSTAMP:'+toICSDate(new Date().toISOString().slice(0,10),'00:00'),
-          'DTSTART:'+dtstart,
-          'DTEND:'+dtend,
-          'SUMMARY:'+ev.title,
-          'DESCRIPTION:Evento da escola',
-          'LOCATION:'+ev.location,
-          'END:VEVENT',
-          'END:VCALENDAR'
-        ];
-        return lines.join('\\r\\n');
-      }
-      // expor para o template (Astro usa client-side para data:uris)
-      window.generateICS = generateICS;
-    </script>
   </body>
 </html>
