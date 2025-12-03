@@ -1,7 +1,6 @@
 ---
-import Footer from '../components/Footer.astro';
 // src/components/Footer.astro
-// Componente Astro corrigido — sem <template>, frontmatter válido e iframe funcionando.
+// Componente Footer — versão com correção mínima para a âncora de localização
 ---
 
 <footer class="w-full bg-white text-slate-900">
@@ -17,7 +16,7 @@ import Footer from '../components/Footer.astro';
     <!-- Mapa embed (full width) -->
     <div class="w-full border-t border-b">
       <div class="max-w-6xl mx-auto">
-        <div class="w-full h-72 md:h-96">
+        <div id="localizacao-mapa" class="w-full h-72 md:h-96"> <!-- ID adicionado AQUI -->
           <iframe
             src="https://www.google.com/maps?q=R.+M%C3%A9xico,+932+-+St.+10,+Ariquemes+-+RO,+78933-425&output=embed"
             width="100%"
@@ -49,7 +48,8 @@ import Footer from '../components/Footer.astro';
         <li><a href="/informacoes" class="underline">Informações</a></li>
         <li><a href="/documentos" class="underline">Documentos para matrícula</a></li>
         <li><a href="/calendario" class="underline">Calendário escolar</a></li>
-        <li><a href="/localizacao" class="underline">Localização</a></li>
+        <!-- aqui mantive o link como âncora para facilitar a navegação -->
+        <li><a href="#localizacao-mapa" class="underline">Localização</a></li>
       </ul>
     </div>
 
@@ -74,21 +74,7 @@ import Footer from '../components/Footer.astro';
   <div class="border-t">
     <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between text-sm text-slate-600">
       <p>© <span>{new Date().getFullYear()}</span> Escola Exemplo. Todos os direitos reservados.</p>
-      <p class="mt-2 md:mt-0">Endereço e telefone atualizados — confira a página <a href="/localizacao" class="underline">Localização</a>.</p>
+      <p class="mt-2 md:mt-0">Endereço e telefone atualizados — confira a página <a href="#localizacao-mapa" class="underline">Localização</a>.</p>
     </div>
   </div>
 </footer>
-
-<!--
-  Instruções de uso rápidas:
-  1) O arquivo deve ser salvo em: src/components/Footer.astro
-  2) Para inserir no layout principal (src/layouts/Base.astro) cole estas linhas no topo do frontmatter do layout:
-
-  import Footer from '../components/Footer.astro';
-
-  e, logo antes de </body> ou no final do arquivo, coloque:
-
-  <Footer />
-
-  Ajuste o caminho do import se a sua estrutura for diferente (ex: ../../components/Footer.astro).
--->
