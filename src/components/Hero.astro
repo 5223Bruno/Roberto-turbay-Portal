@@ -1,0 +1,29 @@
+---
+/**
+ * Hero.astro
+ * Props:
+ *  - title (string)
+ *  - subtitle (string)
+ *  - ctas (array) [{ label, href, variant: 'primary'|'secondary' }]
+ */
+const { title = "Título Principal", subtitle = "", ctas = [] } = Astro.props;
+---
+<section class="hero">
+  <div class="hero-inner container-max">
+    <h1 class="hero-title">{title}</h1>
+    {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+
+    <div class="hero-ctas" role="group" aria-label="Ações principais">
+      {ctas.map((c, i) => (
+        <a
+          key={i}
+          href={c.href || "#"}
+          class={c.variant === "secondary" ? "btn-hero secondary" : "btn-hero"}
+          style={`margin-left:${i === 0 ? '0' : '8px'};`}
+        >
+          {c.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

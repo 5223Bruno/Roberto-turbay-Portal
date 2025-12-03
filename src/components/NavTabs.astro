@@ -1,0 +1,64 @@
+---
+/**
+ * src/components/NavTabs.astro
+ * Versão neutra: não faz toggle de "Professores", não usa localStorage.
+ * Props:
+ *  - tabs: [{ id, label }]
+ *  - defaultTab: string (opcional)
+ */
+const { tabs = [], defaultTab = null } = Astro.props;
+const initial = tabs.length ? tabs[0].id : null;
+const start = defaultTab ?? initial;
+---
+
+<div class="w-full">
+  <nav id="navtabs-astro" class="flex gap-3 items-center justify-center mb-6 flex-wrap" role="tablist" aria-label="Navegação de abas">
+    {tabs.map((t) => (
+      <button
+        class="tab-btn px-4 py-2 rounded-full bg-white border text-sm font-medium"
+        data-tab={t.id}
+        aria-selected={t.id === start ? "true" : "false"}
+        type="button"
+      >
+        {t.label}
+      </button>
+    ))}
+  </nav>
+
+  <script type="module">
+    (function () {
+      const wrapper = document.getElementById('navtabs-astro');
+      if (!wrapper) return;
+
+      function setActive(tabId) {
+        wrapper.querySelectorAll('.tab-btn').forEach(btn => {
+          const isActive = btn.dataset.tab === tabId;
+          btn.classList.toggle('bg-brand', isActive);
+          btn.classList.toggle('text-white', isActive);
+          btn.classList.toggle('shadow-lg', isActive);
+          btn.classList.toggle('border', !isActive);
+          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        const ev = new CustomEvent('navtab:change', { detail: { tabId } });
+        document.dispatchEvent(ev);
+      }
+
+      // ativa a aba inicial
+      const initiallySelected = wrapper.querySelector('.tab-btn[aria-selected="true"]')?.dataset.tab || wrapper.querySelector('.tab-btn')?.dataset.tab;
+      setActive(initiallySelected);
+
+      // clique nas abas
+      wrapper.addEventListener('click', (e) => {
+        const btn = e.target.closest('.tab-btn');
+        if (!btn) return;
+        const tab = btn.dataset.tab;
+        setActive(tab);
+      });
+    })();
+  </script>
+
+  <style>
+    .bg-brand { background-color: #0b63d8 !important; }
+  </style>
+</div>

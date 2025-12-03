@@ -1,0 +1,13 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold">Notícias / Comunicados</h1>
+    <p class="mt-2">Lista de comunicados (arquivos Markdown em <code>src/content/noticias</code>).</p>
+    <div class="mt-4 grid gap-4">
+      <!-- aqui você pode renderizar dinamicamente os arquivos de src/content se integrar Content Collections -->
+      <div class="p-4 border rounded">Nenhum comunicado carregado — adicione arquivos .md em src/content/noticias</div>
+    </div>
+  </main>
+</Layout>

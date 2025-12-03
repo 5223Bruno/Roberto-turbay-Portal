@@ -1,0 +1,17 @@
+---
+import Base from "../layouts/Base.astro";
+import EstruturaEscolar from "../components/EstruturaEscolar.astro";
+
+const diretoria = [ /* ... */ ];
+const coordenacao = [ /* ... */ ];
+const secretaria = [ /* ... */ ];
+---
+
+<Base>
+  <section style="margin-top:8px;">
+    <h1 class="section-title" style="color:var(--white);">Equipe Escolar</h1>
+    <div class="section-block">
+      <EstruturaEscolar diretoria={diretoria} coordenacao={coordenacao} secretaria={secretaria} />
+    </div>
+  </section>
+</Base>

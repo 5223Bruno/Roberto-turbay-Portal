@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Node
 node_modules/
 dist/
@@ -11,3 +12,6 @@ yarn-error.log*
 .DS_Store
 .idea/
 *.local
+=======
+node_modules
+>>>>>>> 7b22bb5 (site escolar inicial)

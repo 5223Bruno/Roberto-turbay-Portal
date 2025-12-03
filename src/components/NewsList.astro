@@ -1,0 +1,26 @@
+---
+/**
+ * NewsList.astro
+ * Props:
+ *  - posts: [{ id, title, date, excerpt, href }]
+ * Renders a vertical list of news items.
+ */
+const { posts = [] } = Astro.props;
+---
+<ul style="list-style:none; padding:0; margin:0;" aria-live="polite">
+  {posts.map((p) => (
+    <li key={p.id} class="section-block" style="margin-bottom:12px;">
+      <div style="display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap;">
+        <div style="flex:0 0 110px;">
+          <img src={p.image || '/img/placeholder-news.jpg'} alt={p.title} style="width:110px; height:72px; object-fit:cover; border-radius:8px;" loading="lazy" />
+        </div>
+
+        <div style="flex:1;">
+          <a href={p.href || '#'} class="text-brand" style="font-weight:700; font-size:1.05rem;">{p.title}</a>
+          <div class="muted" style="font-size:0.9rem; margin-top:6px;">{p.excerpt}</div>
+          <div class="muted" style="font-size:0.85rem; margin-top:8px;">{p.date}</div>
+        </div>
+      </div>
+    </li>
+  ))}
+</ul>

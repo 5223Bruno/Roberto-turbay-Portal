@@ -1,0 +1,67 @@
+---
+/**
+ * EstruturaEscolar.astro
+ * Props:
+ *  - diretoria: [{ nome, cargo, foto }]
+ *  - coordenacao: [{ nome, cargo, foto }]
+ *  - secretaria: [{ nome, cargo, foto }]
+ *
+ * Exibe blocos hierárquicos (Direção -> Coordenação -> Secretaria)
+ */
+const {
+  diretoria = [],
+  coordenacao = [],
+  secretaria = []
+} = Astro.props;
+---
+<div class="flex flex-col items-center w-full">
+
+  <!-- Diretoria -->
+  <section class="w-full flex flex-col items-center gap-6 py-6">
+    <h2 class="section-title">Direção</h2>
+    <div class="card-grid" style="margin-top:8px;">
+      {diretoria.map((p, i) => (
+        <article class="card-school" key={p.nome || i}>
+          <img src={p.foto || '/img/placeholder-person.jpg'} alt={p.nome} class="card-img" loading="lazy" />
+          <div class="card-body">
+            <div class="name">{p.nome}</div>
+            <div class="cargo">{p.cargo}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Coordenação -->
+  <section class="w-full flex flex-col items-center gap-6 py-6">
+    <h2 class="section-title">Coordenação Pedagógica</h2>
+    <div class="card-grid" style="margin-top:8px;">
+      {coordenacao.map((p, i) => (
+        <article class="card-school" key={p.nome || i}>
+          <img src={p.foto || '/img/placeholder-person.jpg'} alt={p.nome} class="card-img" loading="lazy" />
+          <div class="card-body">
+            <div class="name">{p.nome}</div>
+            <div class="cargo">{p.cargo}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Secretaria -->
+  <section class="w-full flex flex-col items-center gap-6 py-6">
+    <h2 class="section-title">Secretaria Escolar</h2>
+    <div class="card-grid" style="margin-top:8px;">
+      {secretaria.map((p, i) => (
+        <article class="card-school" key={p.nome || i}>
+          <img src={p.foto || '/img/placeholder-person.jpg'} alt={p.nome} class="card-img" loading="lazy" />
+          <div class="card-body">
+            <div class="name">{p.nome}</div>
+            <div class="cargo">{p.cargo}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+</div>

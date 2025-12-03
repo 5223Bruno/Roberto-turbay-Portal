@@ -1,0 +1,22 @@
+---
+/**
+ * DestaquesGrid.astro
+ * Props:
+ *  - items: [{ image, title, excerpt, badge }]
+ */
+const { items = [] } = Astro.props;
+---
+<div class="card-grid">
+  {items.map((it, i) => (
+    <article class="card-school animate-fade" key={i} style={`animation-delay:${i*80}ms`}>
+      <img src={it.image || "/img/placeholder-news.jpg"} alt={it.title} class="card-img" loading="lazy" />
+      <div class="card-body">
+        <div class="name">{it.title}</div>
+        {it.excerpt && <div class="cargo muted" style="margin-top:6px;">{it.excerpt}</div>}
+        <div style="margin-top:10px;">
+          {it.badge ? <span class="badge-yellow">{it.badge}</span> : null}
+        </div>
+      </div>
+    </article>
+  ))}
+</div>

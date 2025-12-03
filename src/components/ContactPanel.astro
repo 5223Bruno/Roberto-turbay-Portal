@@ -1,0 +1,109 @@
+---
+/**
+ * ContactPanel.astro
+ *
+ * Mostra bloco de contato/infomações à esquerda e grande imagem com logo à direita,
+ * parecido com a imagem que você enviou.
+ *
+ * Props:
+ *  - schoolName (string)
+ *  - shortName (string) // exemplo "EAA" no design de exemplo
+ *  - addressLines (array of strings)
+ *  - telefone (string)
+ *  - whatsapp (string)
+ *  - mapHref (string)
+ *  - ctaScheduleHref (string)
+ *  - ctaWhatsappHref (string)
+ *  - bgImage (string) // url para a imagem de fundo da direita (ex: "/img/bg-school.jpg")
+ *  - logo (string) // url para logo da escola (ex: "/img/logo-white.png")
+ *
+ * Uso:
+ * <ContactPanel bgImage="/img/bg-school.jpg" logo="/img/logo-white.png" />
+ */
+const {
+  schoolName = "Escola Roberto Turbay",
+  shortName = "ERT",
+  addressLines = ["Rua Exemplo, 123 - Ariquemes - RO", "CEP: 76.870-450"],
+  telefone = "(69) 3535-2931",
+  whatsapp = "(69) 9 9999-9999",
+  mapHref = "#",
+  ctaScheduleHref = "#",
+  ctaWhatsappHref = "#",
+  bgImage = "/img/placeholder-hero.jpg",
+  logo = "/img/logo-white.png"
+} = Astro.props;
+---
+<section class="contact-panel w-full">
+  <div class="container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-0">
+
+    <!-- Coluna esquerda: informações (ocupa 5/12 em lg) -->
+    <div class="col-left lg:col-span-5 px-6 py-10"
+         style="background: var(--primary-light);">
+      <div style="max-width:520px;">
+        <h3 style="color:var(--primary-dark); font-weight:800; font-size:1.6rem; margin-bottom:6px;">
+          {schoolName}
+        </h3>
+        <div style="color:var(--accent); font-weight:700; margin-bottom:10px;">{shortName}</div>
+
+        <div class="muted" style="margin-top:12px; margin-bottom:14px;">
+          {addressLines.map(line => (
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+              <!-- ícone pequeno -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex:0 0 16px; color:var(--primary-dark);">
+                <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="9" r="2.2" fill="currentColor"/>
+              </svg>
+              <span style="color:var(--primary-dark);">{line}</span>
+            </div>
+          ))}
+        </div>
+
+        <a class="text-[0.95rem] font-semibold" href={mapHref} style="color:var(--accent); display:inline-block; margin-bottom:18px;">VER MAPA</a>
+
+        <div style="margin-top:18px; margin-bottom:18px;">
+          <div style="font-weight:800; color:var(--primary-dark); margin-bottom:6px;">Telefone: <span style="font-weight:700; color:var(--primary-dark);">{telefone}</span></div>
+          <div style="font-weight:800; color:var(--primary-dark);">WhatsApp: <span style="font-weight:700; color:var(--primary-dark);">{whatsapp}</span></div>
+        </div>
+
+        <!-- Botões -->
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:18px;">
+          <a href={ctaScheduleHref} class="btn-primary" style="display:block; text-align:center; padding:14px 18px;">Agendar atendimento online</a>
+          <a href={ctaWhatsappHref} class="btn-primary" style="display:block; text-align:center; padding:12px 18px; background: var(--primary-dark); color: var(--white);">
+            Atendimento WhatsApp
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Coluna direita: imagem com logo centrada (ocupa 7/12 em lg) -->
+    <div class="col-right lg:col-span-7 relative h-64 sm:h-80 md:h-96 lg:h-[420px]" style={`background-image: linear-gradient(90deg, rgba(10,92,160,0.16), rgba(10,92,160,0.02)), url('${bgImage}'); background-size: cover; background-position: center;`}>
+      <!-- camada blur / overlay opcional -->
+      <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+        <!-- logo centralizado -->
+        <img src={logo} alt={schoolName + ' logo'} style="max-width:260px; width:40%; opacity:0.95; filter: drop-shadow(0 8px 30px rgba(0,0,0,0.25));" loading="lazy" />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ajustes locais para integração com global.css */
+  .contact-panel { margin-top: 24px; margin-bottom: 24px; }
+
+  /* garantir boa responsividade */
+  @media (min-width: 1024px) {
+    .col-left { padding-left: 48px; padding-right: 48px; display:flex; align-items:center; }
+    .col-right { padding:0; }
+  }
+
+  @media (max-width: 1023px) {
+    /* empilha: imagem primeiro (opcional) - troque a ordem se preferir */
+    .container-max > .col-left { order: 2; }
+    .container-max > .col-right { order: 1; }
+  }
+
+  /* Botões respeitam classes existentes (usa .btn-primary do global.css) */
+  .btn-primary { border-radius: 8px; font-weight:700; }
+</style>

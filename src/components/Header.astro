@@ -1,0 +1,193 @@
+---
+import "../styles/global.css";
+---
+<header>
+  <style>
+    /* Alturas */
+    :root {
+      --topbar-height: 60px;
+      --header-height: 80px;
+    }
+
+    /* FORÇA as barras a ficarem ESTÁTICAS (não fixas, não seguem a rolagem) */
+    #topbar,
+    #main-header {
+      position: static !important;
+    }
+
+    #topbar {
+      height: var(--topbar-height);
+      background: linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02));
+    }
+
+    #main-header {
+      height: var(--header-height);
+      background: var(--primary-dark);
+    }
+  </style>
+
+  <!-- TOPBAR (ESTÁTICA, NÃO FIXA) -->
+  <div id="topbar">
+    <div class="container-max flex items-center justify-between px-4" style="height:var(--topbar-height);">
+
+      <!-- Links institucionais -->
+      <nav class="hidden sm:flex items-center gap-8"
+           style="font-weight:600; font-size:0.98rem; color:rgba(255,255,255,0.95);">
+        <a href="/a-rede" class="hover:underline">A Rede</a>
+        <a href="/historia" class="hover:underline">Nossa História</a>
+        <a href="/proposta-educacional" class="hover:underline">Proposta Educacional</a>
+        <a href="/unidades" class="hover:underline">Unidades</a>
+      </nav>
+
+      <!-- Ícones sociais -->
+      <div class="flex items-center gap-3">
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com" target="_blank" aria-label="Instagram"
+           class="inline-flex items-center justify-center rounded-full w-9 h-9 bg-white/10 hover:bg-white/20 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor"
+               viewBox="0 0 24 24" style="color:white;">
+            <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 
+                     6.1A3.9 3.9 0 1 0 15.9 12 
+                     3.9 3.9 0 0 0 12 8.1zM18.6 
+                     6a1.1 1.1 0 1 0 1.1 1.1A1.1 
+                     1.1 0 0 0 18.6 6z"/>
+          </svg>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://www.facebook.com" target="_blank" aria-label="Facebook"
+           class="inline-flex items-center justify-center rounded-full w-9 h-9 bg-white/10 hover:bg-white/20 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor"
+               viewBox="0 0 24 24" style="color:white;">
+            <path d="M22 12a10 10 0 1 0-11.5 
+                     9.9v-7H8v-3h2.5V9.5c0-2.5 
+                     1.5-3.9 3.7-3.9 1.1 0 2.3.2 
+                     2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 
+                     1.6V12H19l-.5 3h-2v7A10 10 
+                     0 0 0 22 12z"/>
+          </svg>
+        </a>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER PRINCIPAL (ESTÁTICO) -->
+  <div id="main-header" class="header-bg">
+    <div class="container-max flex items-center justify-between px-4" style="height:var(--header-height);">
+
+      <!-- LOGO + NOME -->
+      <a href="/" class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-xl bg-[var(--primary-dark)] flex items-center justify-center shadow-md">
+          <img src="/img/logo.svg" alt="Escola Roberto Turbay" class="w-8 h-8" />
+        </div>
+
+        <div class="leading-tight">
+          <div class="text-lg font-extrabold text-white">Escola Roberto Turbay</div>
+          <div class="text-sm text-[rgba(255,255,255,0.85)] -mt-1">Educação com respeito e inovação</div>
+        </div>
+      </a>
+
+      <!-- NAV DESKTOP -->
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="/equipe" class="menu-link">Equipe</a>
+        <a href="/localizacao" class="menu-link">Localização</a>
+        <a href="/informacoes" class="menu-link">Informações</a>
+
+        <!-- Dropdown 'Mais' -->
+        <div class="relative">
+          <button id="more-btn" class="menu-link flex items-center gap-2">
+            Mais
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <div id="more-menu"
+               class="hidden absolute right-0 mt-3 w-56 bg-[var(--white)] 
+                      text-[var(--black)] rounded-md shadow-lg 
+                      ring-1 ring-black ring-opacity-5 z-50">
+            <a href="/calendario" class="block px-4 py-2 text-sm hover:bg-[var(--primary-light)]">Calendário Escolar</a>
+            <a href="/projetos" class="block px-4 py-2 text-sm hover:bg-[var(--primary-light)]">Projetos</a>
+            <a href="/documentos" class="block px-4 py-2 text-sm hover:bg-[var(--primary-light)]">Documentos para matrícula</a>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <a href="/contato" class="ml-4 btn-primary">Entrar em Contato</a>
+      </nav>
+
+      <!-- BOTÃO MOBILE -->
+      <button id="menu-btn" class="md:hidden p-2 text-white/90 hover:text-[var(--accent)]">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+    </div>
+
+    <!-- MENU MOBILE -->
+    <div id="mobile-menu"
+         class="md:hidden hidden bg-[var(--primary-dark)]/95 border-t border-[rgba(255,255,255,0.04)] py-3">
+      <div class="px-4 flex flex-col gap-3">
+        <a href="/equipe" class="mobile-link text-white">Equipe</a>
+        <a href="/localizacao" class="mobile-link text-white">Localização</a>
+        <a href="/informacoes" class="mobile-link text-white">Informações</a>
+
+        <div class="pt-2 border-t border-[rgba(255,255,255,0.04)]">
+          <div class="text-xs text-[rgba(255,255,255,0.8)] uppercase mb-2">Mais</div>
+          <a href="/calendario" class="mobile-link text-white">Calendário Escolar</a>
+          <a href="/projetos" class="mobile-link text-white">Projetos</a>
+          <a href="/documentos" class="mobile-link text-white">Documentos para matrícula</a>
+        </div>
+
+        <a href="/contato"
+           class="mt-3 bg-[var(--accent)] text-black px-4 py-2 rounded-lg text-center font-semibold shadow-md">
+          Entrar em Contato
+        </a>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<script>
+  // mobile toggle
+  const btn = document.getElementById("menu-btn");
+  const menu = document.getElementById("mobile-menu");
+  if (btn) {
+    btn.onclick = () => menu.classList.toggle("hidden");
+  }
+
+  // dropdown
+  const moreBtn = document.getElementById("more-btn");
+  const moreMenu = document.getElementById("more-menu");
+  if (moreBtn) {
+    moreBtn.onclick = (e) => {
+      e.stopPropagation();
+      moreMenu.classList.toggle("hidden");
+    };
+    document.onclick = () => moreMenu.classList.add("hidden");
+  }
+</script>
+
+<style>
+  .menu-link {
+    color: var(--white);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .menu-link:hover {
+    color: var(--accent);
+  }
+  .mobile-link {
+    color: white;
+    padding: 0.5rem 0;
+    display: block;
+  }
+</style>

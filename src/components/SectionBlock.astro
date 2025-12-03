@@ -1,0 +1,18 @@
+---
+/**
+ * SectionBlock.astro
+ * Props:
+ *  - title (string)
+ *  - subtitle (string) optional
+ * Usage:
+ * <SectionBlock title="Nossa Missão"><p>conteúdo</p></SectionBlock>
+ */
+const { title = "", subtitle = "" } = Astro.props;
+---
+<section class="section-block">
+  {title && <h2 class="section-title">{title}</h2>}
+  {subtitle && <p class="muted" style="margin-bottom:12px;">{subtitle}</p>}
+  <div>
+    <slot />
+  </div>
+</section>

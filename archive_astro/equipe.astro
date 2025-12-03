@@ -1,0 +1,84 @@
+---
+import NavTabs from "~/components/NavTabs.astro";
+import EstruturaEscolar from "~/components/EstruturaEscolar.astro";
+
+const tabs = [
+  { id: "sobre", label: "Sobre" },
+  { id: "cursos", label: "Cursos" },
+  { id: "equipe", label: "Equipe Escolar" } // id = 'equipe'
+];
+
+const diretoria = [
+  { nome: "Maria Silva", cargo: "Diretora Geral", foto: "/equipe/diretora.jpg" },
+  { nome: "Joana Santos", cargo: "Vice-Diretora", foto: "/equipe/vice.jpg" }
+];
+
+const coordenacao = [
+  { nome: "Carla Mendes", cargo: "Coordenadora Pedagógica", foto: "/equipe/coord1.jpg" },
+  { nome: "Priscila Rocha", cargo: "Coordenadora Pedagógica", foto: "/equipe/coord2.jpg" }
+];
+
+const secretaria = [
+  { nome: "Ana Paula", cargo: "Secretária", foto: "/equipe/secretaria1.jpg" },
+  { nome: "Juliana Souza", cargo: "Auxiliar", foto: "/equipe/secretaria2.jpg" }
+];
+---
+
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Equipe Escolar</title>
+  </head>
+
+  <body class="bg-[linear-gradient(180deg,#eef6ff_0%,#ffffff_100%)] text-slate-900">
+    <main class="container mx-auto py-12 px-4">
+      <h1 class="text-3xl font-bold mb-6 text-center">Equipe Escolar</h1>
+
+      <!-- Abas (NavTabs.astro) -->
+      <NavTabs tabs={tabs} defaultTab="sobre" />
+
+      <!-- Conteúdo das abas -->
+      <div id="tab-content" class="w-full bg-white rounded-2xl p-6 shadow-sm">
+        <!-- Sobre -->
+        <section data-content="sobre" class="tab-section">
+          <h2 class="text-xl font-semibold">Sobre a Escola</h2>
+          <p class="mt-2 text-slate-700">Informações gerais da escola...</p>
+        </section>
+
+        <!-- Cursos -->
+        <section data-content="cursos" class="tab-section hidden">
+          <h2 class="text-xl font-semibold">Cursos</h2>
+          <p class="mt-2 text-slate-700">Descrição dos cursos...</p>
+        </section>
+
+        <!-- Equipe Escolar -->
+        <section data-content="equipe" class="tab-section hidden">
+          <EstruturaEscolar
+            diretoria={diretoria}
+            coordenacao={coordenacao}
+            secretaria={secretaria}
+          />
+        </section>
+      </div>
+    </main>
+
+    <script type="module">
+      document.addEventListener("navtab:change", (e) => {
+        const active = e.detail?.tabId;
+        if (!active) return;
+        document.querySelectorAll(".tab-section").forEach((sec) => {
+          sec.classList.toggle("hidden", sec.dataset.content !== active);
+        });
+      });
+
+      // Mostrar aba default
+      (function initDefault() {
+        const def = "sobre";
+        document.querySelectorAll(".tab-section").forEach((sec) => {
+          sec.classList.toggle("hidden", sec.dataset.content !== def);
+        });
+      })();
+    </script>
+  </body>
+</html>
