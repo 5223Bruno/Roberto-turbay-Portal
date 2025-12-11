@@ -1,8 +1,10 @@
-@'
 ---
-// src/pages/calendario.astro
-// Exibe o PDF do calendário diretamente na página (inline viewer).
-// Coloque o arquivo PDF em: public/docs/calendario.pdf
+/*
+  src/pages/calendario.astro
+  Viewer do PDF — único viewer (iframe) + fallback (noscript object)
+  Ajustes: evita duplicação e aumenta a altura em ~25% para melhor leitura.
+  Coloque o PDF em public/docs/calendario.pdf
+*/
 ---
 <!doctype html>
 <html lang="pt-BR">
@@ -12,18 +14,48 @@
     <title>Calendário Escolar — Escola Roberto Turbay</title>
     <meta name="description" content="Calendário escolar oficial — visualização direta do documento." />
     <style>
-      :root{--bg:#f8fafc;--maxw:1100px;--muted:#475569;--accent:#0A5CA0;}
+      :root{
+        --bg:#f8fafc;
+        --maxw:1100px;
+        --muted:#475569;
+        --accent:#0A5CA0;
+      }
+
       html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:#0f172a}
       .page{max-width:var(--maxw);margin:18px auto;padding:16px}
       header h1{margin:0;color:var(--accent);font-size:1.5rem}
       .note{color:var(--muted);font-size:0.95rem;margin-top:6px}
-      .viewer-wrap{margin-top:16px;border-radius:8px;overflow:hidden;border:1px solid #e6eef8;background:#fff;box-shadow:0 6px 20px rgba(11,92,160,0.04)}
-      .pdf-iframe{width:100%;height:calc(100vh - 220px);min-height:480px;border:0;display:block}
-      @media(max-width:800px){.pdf-iframe{height:70vh; min-height:360px}.page{padding:12px}}
+
+      .viewer-wrap{
+        margin-top:16px;
+        border-radius:8px;
+        overflow:hidden;
+        border:1px solid #e6eef8;
+        background:#fff;
+        box-shadow:0 6px 20px rgba(11,92,160,0.04);
+      }
+
+      /* ---------- IFRAME SIZE (AUMENTADA ~25%) ---------- */
+      /* Antes: height: calc(100vh - 220px);  -> Agora: ~1.25x = calc(125vh - 275px) */
+      .pdf-iframe{
+        width:100%;
+        height:calc(125vh - 275px); /* versão aumentada (desktop) */
+        min-height:600px;           /* min maior para melhor leitura */
+        border:0;
+        display:block;
+      }
+
+      @media(max-width:800px){
+        /* mobile: antes 70vh; agora 87.5vh (70vh * 1.25 = 87.5vh) */
+        .pdf-iframe{height:87.5vh; min-height:450px;}
+        .page{padding:12px}
+      }
+
       .fallback{padding:18px;text-align:center}
       .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;}
     </style>
   </head>
+
   <body>
     <main class="page">
       <header>
@@ -32,6 +64,7 @@
       </header>
 
       <div class="viewer-wrap" role="region" aria-label="Visualizador do calendário">
+        <!-- Apenas o IFRAME visível (único viewer em navegadores normais) -->
         <iframe
           class="pdf-iframe"
           src="/docs/calendario.pdf#view=FitH&toolbar=0&navpanes=0"
@@ -40,18 +73,20 @@
         >
         </iframe>
 
-        <object data="/docs/calendario.pdf" type="application/pdf" class="pdf-iframe" aria-label="Calendário Escolar PDF (fallback)">
-          <div class="fallback">
-            <p style="margin-bottom:12px;color:var(--muted)">Seu navegador não exibe PDFs embutidos. Clique no botão abaixo para abrir/baixar o calendário.</p>
-            <a class="btn" href="/docs/calendario.pdf" target="_blank" rel="noopener noreferrer">Abrir Calendário (PDF)</a>
-          </div>
-        </object>
+        <!-- Fallback somente quando o navegador NÃO executa JS (ou em navegadores muito antigos) -->
+        <noscript>
+          <object data="/docs/calendario.pdf" type="application/pdf" class="pdf-iframe" aria-label="Calendário Escolar PDF (fallback)">
+            <div class="fallback">
+              <p style="margin-bottom:12px;color:var(--muted)">Seu navegador não exibe PDFs embutidos. Clique no botão abaixo para abrir/baixar o calendário.</p>
+              <a class="btn" href="/docs/calendario.pdf" target="_blank" rel="noopener noreferrer">Abrir Calendário (PDF)</a>
+            </div>
+          </object>
+        </noscript>
       </div>
 
       <footer style="margin-top:12px;color:var(--muted);font-size:13px">
-        <p>Se precisar do arquivo em outro formato (PNG, JPG ou PDF menor), me avise que eu providencio.</p>
+        <p>Se precisar que eu aumente ainda mais o tamanho, ou adicionar controle de zoom/legendas na própria página, eu implemento em seguida.</p>
       </footer>
     </main>
   </body>
 </html>
-'@ > src/pages/calendario.astro
