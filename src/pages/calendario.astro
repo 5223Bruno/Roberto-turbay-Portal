@@ -1,241 +1,57 @@
+@'
 ---
-/*
-  src/pages/calendario.astro — Versão TESTE gerada automaticamente a partir da imagem.
-  Esta versão contém um conjunto inicial de eventos (veja a lista no topo do arquivo).
-  Edite o array `events` para ajustar datas/títulos/símbolos.
-*/
-
-const YEAR = 2026;
-
-const colorMap = {
-  ferias: '#F4A261',
-  b1: '#F7C6E0',
-  b2: '#C6A6F5',
-  b3: '#90CAF9',
-  b4: '#C8E6C9',
-  exame: '#E6F4EA',
-  atualizacao: '#D1F0F0',
-  recesso: '#E6E6E6'
-};
-
-const symbolLegend = {
-  RM: 'Rematrícula',
-  '#': 'Matrícula de novos estudantes',
-  '!': 'Apresentação dos professores',
-  '*': 'Início / fim das Ativ. Escolares',
-  '$': 'Reunião pedagógica e administrativa',
-  '≠': 'Reunião de pais',
-  '{': 'Início do Bimestre',
-  '}': 'Encerramento do Bimestre',
-  '●': 'Início/Encerramento do ano letivo',
-  PA: 'Planejamento Anual',
-  CC: 'Conselho de Classe',
-  CP: 'Conselho de Professores',
-  '&': 'Preparação do ambiente escolar',
-  I: 'Formação Educ. Inclusiva',
-  'α': 'Formação PROALFA/REVER',
-  '◊': 'Dia do Professor',
-  SP: 'Dia do Servidor Público',
-  R: 'Recesso',
-  F: 'Feriado',
-  FL: 'Feriado Letivo',
-  EL: 'Encerramento do Ano Letivo'
-};
-
-/* ----- EVENTS (primeira versão extraída da imagem) ----- */
-/* Cada evento: { id, date: 'YYYY-MM-DD', title, symbol, colorKey, description } */
-const events = [
-  // REMATRÍCULA (vários dias jan)
-  { id:'rm-2026-01-05', date:'2026-01-05', title:'Rematrícula', symbol:'RM', colorKey:'b1' },
-  { id:'rm-2026-01-06', date:'2026-01-06', title:'Rematrícula', symbol:'RM', colorKey:'b1' },
-  { id:'rm-2026-01-07', date:'2026-01-07', title:'Rematrícula', symbol:'RM', colorKey:'b1' },
-  { id:'rm-2026-01-08', date:'2026-01-08', title:'Rematrícula', symbol:'RM', colorKey:'b1' },
-  { id:'rm-2026-01-09', date:'2026-01-09', title:'Rematrícula', symbol:'RM', colorKey:'b1' },
-
-  // MATRÍCULA NOVOS (jan)
-  { id:'m-2026-01-12', date:'2026-01-12', title:'Matrícula - novos estudantes', symbol:'#', colorKey:'b1' },
-  { id:'m-2026-01-13', date:'2026-01-13', title:'Matrícula - novos estudantes', symbol:'#', colorKey:'b1' },
-  { id:'m-2026-01-14', date:'2026-01-14', title:'Matrícula - novos estudantes', symbol:'#', colorKey:'b1' },
-  { id:'m-2026-01-15', date:'2026-01-15', title:'Matrícula - novos estudantes', symbol:'#', colorKey:'b1' },
-  { id:'m-2026-01-16', date:'2026-01-16', title:'Matrícula - novos estudantes', symbol:'#', colorKey:'b1' },
-
-  // Início do Ano Letivo (conforme imagem)
-  { id:'inicio-ano', date:'2026-02-03', title:'Início do Ano Letivo', symbol:'●', colorKey:'b1' },
-
-  // Reunião de Pais - 1º Bimestre
-  { id:'reuniao-pais-1', date:'2026-03-18', title:'Reunião de Pais (1º Bimestre)', symbol:'≠', colorKey:'b1' },
-
-  // Encerramento 1º Bimestre
-  { id:'enc-bim1', date:'2026-04-21', title:'Encerramento do 1º Bimestre', symbol:'}', colorKey:'b1' },
-  { id:'inic-bim2', date:'2026-04-22', title:'Início do 2º Bimestre', symbol:'{', colorKey:'b2' },
-
-  // Festa Junina
-  { id:'festa-junina', date:'2026-06-12', title:'Festa Junina', symbol:'*', colorKey:'b3' },
-
-  // Recesso / Férias (julho)
-  { id:'ferias-julho', date:'2026-07-01', title:'Início das Férias / Recesso', symbol:'R', colorKey:'ferias' },
-
-  // Início do 3º bimestre (agosto)
-  { id:'inic-bim3', date:'2026-08-03', title:'Início do 3º Bimestre', symbol:'{', colorKey:'b3' },
-
-  // Exame final / ciclo (nov)
-  { id:'exames-nov', date:'2026-11-20', title:'Exame Final / Exame do Ciclo', symbol:'F', colorKey:'exame' },
-
-  // Encerramento do ano letivo (dez)
-  { id:'enc-ano', date:'2026-12-17', title:'Encerramento do Ano Letivo', symbol:'EL', colorKey:'recesso' },
-
-  // Alguns feriados (exemplos)
-  { id:'feriado-21-04', date:'2026-04-21', title:'Feriado Nacional (Tiradentes)', symbol:'F', colorKey:'b2' },
-  { id:'feriado-02-11', date:'2026-11-02', title:'Feriado', symbol:'F', colorKey:'b4' }
-];
-
-/* ----- Helpers (mesmas funções do template que já te mostrei) ----- */
-function pad(n){ return n<10 ? '0'+n : ''+n; }
-function dateToKey(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
-function buildMonthMatrix(year, monthIndex){
-  const first = new Date(Date.UTC(year, monthIndex, 1));
-  const last = new Date(Date.UTC(year, monthIndex+1, 0));
-  const weeks = [];
-  let week = new Array(7).fill(null);
-  for (let i=0;i<first.getUTCDay();i++) week[i]=null;
-  for (let d=1; d<=last.getUTCDate(); d++){
-    const date = new Date(Date.UTC(year, monthIndex, d));
-    const wd = date.getUTCDay();
-    week[wd] = date;
-    if (wd === 6){ weeks.push(week); week = new Array(7).fill(null); }
-  }
-  if (week.some(x=>x!==null)) weeks.push(week);
-  return weeks;
-}
-function eventsByDateMap(eventsList){
-  const map = {};
-  for (const ev of eventsList){
-    if (!map[ev.date]) map[ev.date] = [];
-    map[ev.date].push(ev);
-  }
-  return map;
-}
-const eventsMap = eventsByDateMap(events);
-
-/* ICS generator */
-function toICSDateUTC(dateStr, timeStr){
-  const [y,m,d] = dateStr.split('-').map(Number);
-  if (!timeStr) timeStr = '00:00';
-  const [hh,mm] = timeStr.split(':').map(Number);
-  const dt = new Date(Date.UTC(y,m-1,d,hh,mm,0));
-  return `${dt.getUTCFullYear()}${pad(dt.getUTCMonth()+1)}${pad(dt.getUTCDate())}T${pad(dt.getUTCHours())}${pad(dt.getUTCMinutes())}${pad(dt.getUTCSeconds())}Z`;
-}
-function generateICSForEvents(eventsList){
-  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Escola Roberto Turbay//Calendario//PT'];
-  for (const ev of eventsList){
-    const uid = `${ev.id}@roberto-turbay`;
-    const dtstart = toICSDateUTC(ev.date, ev.time || '00:00');
-    const [y,m,d] = ev.date.split('-').map(Number);
-    const [hh,mm] = (ev.time || '00:00').split(':').map(Number);
-    const start = new Date(Date.UTC(y,m-1,d,hh,mm,0));
-    const end = new Date(start.getTime() + 2*60*60*1000);
-    const dtend = `${end.getUTCFullYear()}${pad(end.getUTCMonth()+1)}${pad(end.getUTCDate())}T${pad(end.getUTCHours())}${pad(end.getUTCMinutes())}${pad(end.getUTCSeconds())}Z`;
-    lines.push('BEGIN:VEVENT');
-    lines.push(`UID:${uid}`);
-    lines.push(`DTSTAMP:${toICSDateUTC(new Date().toISOString().slice(0,10),'00:00')}`);
-    lines.push(`DTSTART:${dtstart}`);
-    lines.push(`DTEND:${dtend}`);
-    lines.push(`SUMMARY:${ev.title}`);
-    lines.push(`DESCRIPTION:${ev.description || ev.title}`);
-    lines.push(`LOCATION:${ev.location || 'Escola Roberto Turbay'}`);
-    lines.push('END:VEVENT');
-  }
-  lines.push('END:VCALENDAR');
-  return lines.join('\r\n');
-}
-const fullIcs = generateICSForEvents(events);
-const icsDataUri = `data:text/calendar;charset=utf-8,${encodeURIComponent(fullIcs)}`;
-
-const monthNames = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const months = [];
-for (let mi=0; mi<12; mi++){
-  months.push({ index:mi, name:monthNames[mi], weeks: buildMonthMatrix(YEAR, mi) });
-}
+// src/pages/calendario.astro
+// Exibe o PDF do calendário diretamente na página (inline viewer).
+// Coloque o arquivo PDF em: public/docs/calendario.pdf
 ---
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <title>Calendário Escolar — Teste</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Calendário Escolar — Escola Roberto Turbay</title>
+    <meta name="description" content="Calendário escolar oficial — visualização direta do documento." />
     <style>
-      :root{--bg:#f8fafc;--muted:#566;--card:#fff}
-      body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);margin:0;color:#0f172a;padding:20px}
-      .page{max-width:1200px;margin:0 auto}
-      h1{color:#0b63b7}
-      .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-      @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-      @media(max-width:600px){.grid{grid-template-columns:1fr}}
-      .month{background:var(--card);padding:10px;border-radius:8px;border:1px solid #e6eef8}
-      .weekdays{display:grid;grid-template-columns:repeat(7,1fr);font-size:12px;color:var(--muted);margin-bottom:6px}
-      .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-      .day{min-height:44px;border-radius:6px;padding:6px;font-size:12px;background:#fff;border:1px solid #eef4fb;position:relative}
-      .day.inactive{background:transparent;border:none}
-      .num{font-weight:700;color:#0b63b7}
-      .event{font-size:11px;margin-top:6px;display:block}
-      .legend{margin-top:14px;padding:10px;background:var(--card);border-radius:8px;border:1px solid #eef4fb}
-      .legend-item{display:flex;gap:8px;align-items:center;margin-bottom:6px}
-      .color-box{width:22px;height:12px;border-radius:4px;border:1px solid rgba(0,0,0,0.06)}
-      .symbol{display:inline-block;padding:4px 6px;border-radius:4px;background:#f2f2f2;border:1px solid #e6e6e6}
-      .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-      .btn{background:#0b63b7;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
+      :root{--bg:#f8fafc;--maxw:1100px;--muted:#475569;--accent:#0A5CA0;}
+      html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:#0f172a}
+      .page{max-width:var(--maxw);margin:18px auto;padding:16px}
+      header h1{margin:0;color:var(--accent);font-size:1.5rem}
+      .note{color:var(--muted);font-size:0.95rem;margin-top:6px}
+      .viewer-wrap{margin-top:16px;border-radius:8px;overflow:hidden;border:1px solid #e6eef8;background:#fff;box-shadow:0 6px 20px rgba(11,92,160,0.04)}
+      .pdf-iframe{width:100%;height:calc(100vh - 220px);min-height:480px;border:0;display:block}
+      @media(max-width:800px){.pdf-iframe{height:70vh; min-height:360px}.page{padding:12px}}
+      .fallback{padding:18px;text-align:center}
+      .btn{display:inline-block;padding:10px 14px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;}
     </style>
   </head>
   <body>
-    <div class="page">
-      <div class="top">
-        <div>
-          <h1>Calendário Escolar — Teste ({YEAR})</h1>
-          <p style="margin:6px 0 0 0;color:#475569">Versão de teste automática — reveja os eventos e me diga ajustes.</p>
-        </div>
-        <div><a class="btn" href={icsDataUri} download={`calendario-${YEAR}.ics`}>Baixar .ics (ano)</a></div>
+    <main class="page">
+      <header>
+        <h1>Calendário Escolar — Documento Oficial</h1>
+        <p class="note">O calendário será exibido abaixo. Se o seu navegador não suportar visualização inline, use o link de download.</p>
+      </header>
+
+      <div class="viewer-wrap" role="region" aria-label="Visualizador do calendário">
+        <iframe
+          class="pdf-iframe"
+          src="/docs/calendario.pdf#view=FitH&toolbar=0&navpanes=0"
+          title="Calendário Escolar — PDF"
+          aria-label="Calendário Escolar em PDF"
+        >
+        </iframe>
+
+        <object data="/docs/calendario.pdf" type="application/pdf" class="pdf-iframe" aria-label="Calendário Escolar PDF (fallback)">
+          <div class="fallback">
+            <p style="margin-bottom:12px;color:var(--muted)">Seu navegador não exibe PDFs embutidos. Clique no botão abaixo para abrir/baixar o calendário.</p>
+            <a class="btn" href="/docs/calendario.pdf" target="_blank" rel="noopener noreferrer">Abrir Calendário (PDF)</a>
+          </div>
+        </object>
       </div>
 
-      <div class="grid" role="list">
-        {months.map(month => (
-          <section class="month" role="listitem" aria-label={month.name}>
-            <h3 style="margin:0 0 8px 0">{month.name}</h3>
-            <div class="weekdays" aria-hidden="true"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div>
-
-            {month.weeks.map(week => (
-              <div class="days">
-                {week.map(day => {
-                  if (!day) return (<div class="day inactive"></div>);
-                  const key = dateToKey(day);
-                  const dayEvents = eventsMap[key] || [];
-                  const colorKey = dayEvents.length ? dayEvents[0].colorKey : null;
-                  const bg = colorKey ? (colorMap[colorKey]||'#fff') : '#fff';
-                  return (
-                    <div class="day" style={`background:${bg}`} title={dayEvents.length ? dayEvents.map(e=>e.title).join(' | '): ''}>
-                      <div class="num">{day.getUTCDate()}</div>
-                      {dayEvents.map(ev => (<div class="event"><span class="symbol">{ev.symbol}</span> {ev.title}</div>))}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </section>
-        ))}
-      </div>
-
-      <section class="legend" id="legend">
-        <h2 style="margin:0 0 10px 0;color:#0b63b7">Legenda de Símbolos</h2>
-        <div>
-          {Object.entries(symbolLegend).map(([sym,text]) => (<div class="legend-item"><span class="symbol">{sym}</span><div>{text}</div></div>))}
-        </div>
-
-        <h2 style="margin:14px 0 8px 0;color:#0b63b7">Legenda de Fundo</h2>
-        <div>
-          {Object.entries(colorMap).map(([k,v]) => (<div class="legend-item"><span class="color-box" style={`background:${v}`}></span><div style="text-transform:capitalize">{k}</div></div>))}
-        </div>
-      </section>
-
-      <p style="margin-top:12px;color:#475569">Observação: revise o array <code>events</code> no topo do arquivo para ajustar datas / adicionar símbolos que faltarem.</p>
-    </div>
+      <footer style="margin-top:12px;color:var(--muted);font-size:13px">
+        <p>Se precisar do arquivo em outro formato (PNG, JPG ou PDF menor), me avise que eu providencio.</p>
+      </footer>
+    </main>
   </body>
 </html>
+'@ > src/pages/calendario.astro
