@@ -1,22 +1,127 @@
 ---
-/**
- * DestaquesGrid.astro
- * Props:
- *  - items: [{ image, title, excerpt, badge }]
- */
-const { items = [] } = Astro.props;
+const destaques = [
+  {
+    titulo: "Calendário Escolar",
+    descricao: "Confira datas importantes, feriados e eventos letivos.",
+    link: "/calendario",
+    cor: "azul",
+    icone: "📅"
+  },
+  {
+    titulo: "Documentos",
+    descricao: "Acesse documentos necessários para matrícula.",
+    link: "/documentos",
+    cor: "amarelo",
+    icone: "📄"
+  },
+  {
+    titulo: "Localização",
+    descricao: "Veja onde estamos localizados e como chegar.",
+    link: "#localizacao",
+    cor: "verde",
+    icone: "📍"
+  },
+  {
+    titulo: "Contato",
+    descricao: "Fale com a escola via WhatsApp ou Instagram.",
+    link: "/contato",
+    cor: "roxo",
+    icone: "💬"
+  }
+];
 ---
-<div class="card-grid">
-  {items.map((it, i) => (
-    <article class="card-school animate-fade" key={i} style={`animation-delay:${i*80}ms`}>
-      <img src={it.image || "/img/placeholder-news.jpg"} alt={it.title} class="card-img" loading="lazy" />
-      <div class="card-body">
-        <div class="name">{it.title}</div>
-        {it.excerpt && <div class="cargo muted" style="margin-top:6px;">{it.excerpt}</div>}
-        <div style="margin-top:10px;">
-          {it.badge ? <span class="badge-yellow">{it.badge}</span> : null}
-        </div>
-      </div>
-    </article>
+
+<div class="destaques-grid">
+  {destaques.map(item => (
+    <a href={item.link} class={`destaque-card ${item.cor}`}>
+      <div class="icone">{item.icone}</div>
+      <h3>{item.titulo}</h3>
+      <p>{item.descricao}</p>
+      <span class="ver-mais">Acessar →</span>
+    </a>
   ))}
 </div>
+
+<style>
+.destaques-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.8rem;
+}
+
+/* CARD BASE */
+.destaque-card {
+  position: relative;
+  padding: 2.2rem 1.8rem;
+  border-radius: 18px;
+  text-decoration: none;
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+
+/* animação hover */
+.destaque-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 22px 55px rgba(0,0,0,0.30);
+}
+
+/* ÍCONE */
+.destaque-card .icone {
+  font-size: 2.6rem;
+  margin-bottom: 1rem;
+}
+
+/* TEXTO */
+.destaque-card h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.destaque-card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+.ver-mais {
+  display: inline-block;
+  margin-top: 1.2rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* CORES */
+.destaque-card.azul {
+  background: linear-gradient(135deg, #0A5CA0, #083f73);
+}
+
+.destaque-card.amarelo {
+  background: linear-gradient(135deg, #F2C94C, #C39100);
+  color: #1e293b;
+}
+
+.destaque-card.amarelo p,
+.destaque-card.amarelo h3,
+.destaque-card.amarelo .ver-mais {
+  color: #1e293b;
+}
+
+.destaque-card.verde {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.destaque-card.roxo {
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+}
+
+/* RESPONSIVO */
+@media (max-width: 640px) {
+  .destaque-card {
+    text-align: center;
+  }
+}
+</style>
