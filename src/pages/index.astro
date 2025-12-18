@@ -18,30 +18,21 @@ const comunicados = [
   { id: "3", title: "Férias escolares", date: "20/12/2025", excerpt: "Início do recesso escolar.", image: "/img/placeholder-news.jpg", href: "/noticias/ferias" }
 ];
 ---
+
 <Base>
-  <!-- Hero -->
-  <Hero
-    title="Bem-vindo à Escola Roberto Turbay"
-    subtitle="Educação com respeito, inovação e cuidado — formando cidadãos."
-    ctas={[
-      { label: "Conheça a Equipe", href: "/equipe" },
-      { label: "Comunicados", href: "/noticias", variant: "secondary" }
-    ]}
-  />
+  <!-- HERO (SEM PROPS — COMPATÍVEL COM O HERO ANTIGO) -->
+  <Hero />
 
-  <!-- Espaçamento para evitar overlap visual com o hero -->
-  <section style="margin-top: -60px;"></section>
-
-  <!-- Container principal -->
+  <!-- CONTEÚDO PRINCIPAL -->
   <div style="margin-top: 16px;">
 
-    <!-- Destaques (grid de cards) -->
+    <!-- DESTAQUES -->
     <section class="section-block">
       <h2 class="section-title">Destaques</h2>
       <DestaquesGrid items={destaqueItems} />
     </section>
 
-    <!-- Comunicados (lista) -->
+    <!-- COMUNICADOS -->
     <section class="section-block" style="margin-top:18px;">
       <h2 class="section-title">Últimos Comunicados</h2>
       <div style="margin-top:12px;">
@@ -49,13 +40,16 @@ const comunicados = [
       </div>
     </section>
 
-    <!-- Pequena seção institucional -->
+    <!-- NOSSA MISSÃO -->
     <section class="section-block" style="margin-top:18px;">
       <h2 class="section-title">Nossa Missão</h2>
-      <p class="muted">Promover educação de qualidade, com inclusão, respeito e preparo para a cidadania. Projetos pedagógicos focados na formação integral dos alunos.</p>
+      <p class="muted">
+        Promover educação de qualidade, com inclusão, respeito e preparo para a cidadania.
+        Projetos pedagógicos focados na formação integral dos alunos.
+      </p>
     </section>
 
-    <!-- ContactPanel (novo bloco com imagem + logo à direita) -->
+    <!-- BLOCO INSTITUCIONAL / CONTATO -->
     <ContactPanel
       bgImage="/img/placeholder-hero.jpg"
       logo="/img/logo-white.png"
@@ -64,9 +58,9 @@ const comunicados = [
       addressLines={["Rua Exemplo, 123 — Ariquemes - RO", "CEP: 76.870-450"]}
       telefone="(69) 3535-2931"
       whatsapp="(69) 9 9999-9999"
-      mapHref="#"
+      mapHref="#localizacao"
       ctaScheduleHref="/contato"
-      ctaWhatsappHref="https://wa.me/5569xxxxxxxx"
+      ctaWhatsappHref="https://wa.me/556935352931"
     />
 
   </div>
